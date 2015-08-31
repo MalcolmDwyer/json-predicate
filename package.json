@@ -1,0 +1,23 @@
+{
+  "name": "json-predicate",
+  "version": "0.0.1",
+  "description": "Javascript implementation of JSON predicate (by Snell)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MalcolmDwyer/json-predicate.git"
+  },
+  "keywords": [
+    "JSON",
+    "predicate"
+  ],
+  "author": "Malcolm Dwyer <malcolm.dwyer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MalcolmDwyer/json-predicate/issues"
+  },
+  "homepage": "https://github.com/MalcolmDwyer/json-predicate#readme"
+}
