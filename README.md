@@ -1,11 +1,14 @@
 # json-predicate
 Javascript implementation of the [JSON Predicate (Snell) spec](http://tools.ietf.org/id/draft-snell-json-test-01.html).
 
+> Currently under active development as of September 1, 2015.  Not
+all operations are implemented yet.
+
 ## Installation
 
 node:
 ```
-$ npm install json-predicate   (Coming soon)
+$ npm install json-predicate
 ````
 
 ## Usage
@@ -89,6 +92,62 @@ predicate = {
   path: '/a/z'
 }
 jsonTest(data, predicate); // false
+```
+
+#### ends
+Check if the string at `path` ends with the provided substring.
+Add `ignore_case: true` to make the check case-insensitive.
+```
+var data = {
+  a: {
+    b: 'Smart People on Ice!'
+  }
+};
+
+var predicate = {
+  op: 'ends',
+  path: '/a/b',
+  value: ' Ice!'
+}
+
+jsonTest(data, predicate); // true
+
+predicate = {
+  op: 'ends',
+  path: '/a/b',
+  value: 'On ICE!',
+  ignore_case: true
+};
+
+jsonTest(data, predicate); // true
+```
+
+#### starts
+Check if the string at `path` starts with the provided substring.
+Add `ignore_case: true` to make the check case-insensitive.
+```
+var data = {
+  a: {
+    b: 'Smart People on Ice!'
+  }
+};
+
+var predicate = {
+  op: 'starts',
+  path: '/a/b',
+  value: 'Smart People'
+}
+
+jsonTest(data, predicate); // true
+
+predicate = {
+  op: 'starts',
+  path: '/a/b',
+  value: 'sMaRt',
+  ignore_case: true
+};
+
+jsonTest(data, predicate); // true
 ```
 
 #### and

@@ -119,6 +119,96 @@ describe('json-predicate', function() {
       });
     });
 
+    describe('ends operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'ends'
+        };
+      });
+      it('returns true for end string (shallow path)', function() {
+        pred.value = 'BC';
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it('returns false for non-ending string (shallow path)', function() {
+        pred.value = 'AB';
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      it('returns true for end string (deep path)', function() {
+        pred.value = 'NO';
+        pred.path = '/objA/objB/stringMNO';
+        result = test(in0, pred)
+        result.should.be.true;
+      });
+      it('returns false for non-ending string (deep path)', function() {
+        pred.value = 'XY';
+        pred.path = '/objA/stringXYZ';
+        result = test(in0, pred)
+        result.should.be.false;
+      });
+      it('returns false for mismatching case (and ignore_case:false has no effect)', function() {
+        pred.value = 'yz';
+        pred.path = '/objA/stringXYZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      it('honors ignore_case:true', function() {
+        pred.value = 'yz';
+        pred.path = '/objA/stringXYZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+    });
+
+    describe('starts operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'starts'
+        };
+      });
+      it('returns true for starting string (shallow path)', function() {
+        pred.value = 'AB';
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it('returns false for non-starting string (shallow path)', function() {
+        pred.value = 'BC';
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      it('returns true for start string (deep path)', function() {
+        pred.value = 'MN';
+        pred.path = '/objA/objB/stringMNO';
+        result = test(in0, pred)
+        result.should.be.true;
+      });
+      it('returns false for non-starting string (deep path)', function() {
+        pred.value = 'YZ';
+        pred.path = '/objA/stringXYZ';
+        result = test(in0, pred)
+        result.should.be.false;
+      });
+      it('returns false for mismatching case (and ignore_case:false has no effect)', function() {
+        pred.value = 'xy';
+        pred.path = '/objA/stringXYZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      it('honors ignore_case:true', function() {
+        pred.value = 'xy';
+        pred.path = '/objA/stringXYZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+    });
+
     describe('defined operation', function() {
       beforeEach(function() {
         pred = {
