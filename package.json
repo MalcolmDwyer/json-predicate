@@ -2,9 +2,9 @@
   "name": "json-predicate",
   "version": "0.0.1",
   "description": "Javascript implementation of JSON predicate (by Snell)",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "mocha test.js"
+    "test": "mocha test/test.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/MalcolmDwyer/json-predicate/issues"
   },
-  "homepage": "https://github.com/MalcolmDwyer/json-predicate#readme"
+  "homepage": "https://github.com/MalcolmDwyer/json-predicate#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.0"
+  }
 }
