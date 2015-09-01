@@ -143,4 +143,95 @@ describe('json-predicate', function() {
       });
     });
   });
+
+  describe('second order predicates', function() {
+    describe('and operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'and'
+        };
+      });
+      it('returns true for AND case with shallow endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringA'
+          },
+          {
+            op: 'defined',
+            path: '/stringABC'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for AND case with deep endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/objA/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/objA/stringXYZ'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for AND case with (t,t) and compound paths', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/stringXYZ'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for AND case with (t,t,t)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/stringXYZ'
+          },
+          {
+            op: 'defined',
+            path: '/null2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for AND case with (t,f)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/not_real'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+  });
 });

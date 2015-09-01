@@ -21,11 +21,23 @@ var passesPredicate = jsonTest(inputData, predicate);
 * First Order Predicates
   * [contains](#contains)
   * [defined](#defined)
-  * ...
+  * [ends](#ends)
+  * [in](#in)
+  * [less](#less)
+  * [matches](#matches)
+  * [more](#more)
+  * [starts](#starts)
+  * [test](#test)
+  * [type](#type)
+  * [undefined](#undefined)
 * Second Order Predicates
-  * ...
+  * [and](#and)
+  * [not](#not)
+  * [or](#or)
 
 #### contains
+Check if the string at `path` includes the provided substring.
+Add `ignore_case: true` to make the check case-insensitive.
 ```
 var data = {
   a: {
@@ -39,13 +51,24 @@ var predicate = {
   value: 'People'
 }
 
-jsonTest(data, predicate); --> true
+jsonTest(data, predicate); // true
+
+predicate = {
+  op: 'contains',
+  path: '/a/b',
+  value: 'sMaRt PeOpLe',
+  ignore_case: true
+};
+
+jsonTest(data, predicate); // true
 ```
 #### defined
+Check if the key at `path` exists (is not undefined).
 ```
 var data = {
   a: {
-    b: 'Smart People on Ice!'
+    b: 'You\'ve seen him too?',
+    c: null
   }
 };
 
@@ -53,13 +76,73 @@ var predicate = {
   op: 'defined',
   path: '/a/b'
 }
+jsonTest(data, predicate); // true
 
-jsonTest(data, predicate); --> true
-
-predicate = {
+var predicate = {
   op: 'defined',
   path: '/a/c'
 }
+jsonTest(data, predicate); // true
 
-jsonTest(data, predicate); --> false
+predicate = {
+  op: 'defined',
+  path: '/a/z'
+}
+jsonTest(data, predicate); // false
+```
+
+#### and
+Check if two or more sub-predicates are true.
+```
+var data = {
+  a: {
+    b: 'Much further, much faster!',
+    c: 'I don't know; I found it in one of the labs.'
+  }
+}
+
+predicate = {
+  op: 'and',
+  apply: [
+    {
+      op: 'contains',
+      path: '/a/b',
+      value: 'faster!'
+    },
+    {
+      op: 'contains',
+      path: '/a/c',
+      value: 'labs'
+    }
+  ]
+}
+jsonTest(data, predicate); // true
+```
+
+Paths can also be defined in layers:
+```
+var data = {
+  a: {
+    b: 'Much further, much faster!',
+    c: 'I don't know; I found it in one of the labs.'
+  }
+}
+
+predicate = {
+  op: 'and',
+  path: '/a',
+  apply: [
+    {
+      op: 'contains',
+      path: '/b',
+      value: 'faster!'
+    },
+    {
+      op: 'contains',
+      path: '/c',
+      value: 'labs'
+    }
+  ]
+}
+jsonTest(data, predicate); // true
 ```
