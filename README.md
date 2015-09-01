@@ -5,7 +5,7 @@ Javascript implementation of the [JSON Predicate (Snell) spec](http://tools.ietf
 
 node:
 ```
-$ npm install json-predicate
+$ npm install json-predicate   (Coming soon)
 ````
 
 ## Usage
