@@ -13,19 +13,19 @@ describe('json-predicate', function() {
       null1: null,
       stringA: 'A',
       stringABC: 'ABC',
-      stringABC_123: 'ABC_123',
+      stringAbC_123: 'AbC_123',
       objA: {
         num2: 2,
         null2: null,
         stringX: 'X',
         stringXYZ: 'XYZ',
-        stringXYZ_789: 'XYZ_789',
+        stringXyZ_789: 'XyZ_789',
         objB: {
           num3: 3,
           null3: null,
           stringM: 'M',
           stringMNO: 'MNO',
-          stringMNO_456: 'MNO_456'
+          stringMnO_456: 'MnO_456'
         }
       }
     };
@@ -83,6 +83,19 @@ describe('json-predicate', function() {
         pred.path = '/objA/stringXYZ';
         result = test(in0, pred)
         result.should.be.false;
+      });
+      it('returns false for mismatching case (and ignore_case:false has no effect)', function() {
+        pred.value = 'xy';
+        pred.path = '/objA/stringXYZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      it('honors ignore_case:true', function() {
+        pred.value = 'xy';
+        pred.path = '/objA/stringXYZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
       });
     });
 
