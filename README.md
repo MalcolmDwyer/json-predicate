@@ -18,14 +18,14 @@ var passesPredicate = jsonTest(inputData, predicate);
 ```
 
 ## operations
-* [First Order Predicates](#first)
+* [First Order Predicates]
   * [contains](#contains)
   * [defined](#defined)
   * ...
-* [Second Order Predicates](#second)
+* [Second Order Predicates]
   * ...
 
-### First Order Predicates [first]
+### First Order Predicates
 #### contains
 ```
 var data = {
@@ -65,4 +65,4 @@ predicate = {
 jsonTest(data, predicate); --> false
 ```
 
-### Second Order Predicates [second]
+### Second Order Predicates
