@@ -343,5 +343,183 @@ describe('json-predicate', function() {
         result.should.be.false;
       });
     });
+
+    describe('or operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'or'
+        };
+      });
+      it('returns true for OR case with shallow endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/stringABC'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for OR case with deep endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/objA/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/objA/stringXYZ'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for OR case with (t,f) and compound paths', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/stringXYZ'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for OR case with (t,f,t)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/null2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for OR case with (f,f)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_1'
+          },
+          {
+            op: 'defined',
+            path: '/not_real_2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
+    describe('not operation (a.k.a. logical NOR operation)', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'not'
+        };
+      });
+      it('returns true for NOT case (f,f) with shallow endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_1'
+          },
+          {
+            op: 'defined',
+            path: '/not_real_2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for NOT case (f,f) with deep endpoint paths', function() {
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/objA/not_real_1'
+          },
+          {
+            op: 'defined',
+            path: '/objA/not_real_2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for NOT case with (t,f) and compound paths', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/stringXYZ'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for OR case with (t,f,t)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/stringX'
+          },
+          {
+            op: 'defined',
+            path: '/not_real_thing'
+          },
+          {
+            op: 'defined',
+            path: '/null2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for OR case with (f,f)', function() {
+        pred.path = '/objA';
+        pred.apply = [
+          {
+            op: 'defined',
+            path: '/not_real_1'
+          },
+          {
+            op: 'defined',
+            path: '/not_real_2'
+          }
+        ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+    });
   });
 });
