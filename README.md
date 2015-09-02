@@ -48,8 +48,8 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [undefined](#undefined) (not implemented yet)
 * Second Order Predicates
   * [and](#and)
-  * [not](#not) (not implemented yet)
-  * [or](#or) (not implemented yet)
+  * [not](#not)
+  * [or](#or)
 
 #### contains
 Check if the string at `path` includes the provided substring.
