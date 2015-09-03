@@ -51,19 +51,19 @@ describe('json-predicate', function() {
     };
   });
 
-  it('should return false for invalid predicate', function() {
+  it('returns false for invalid predicate', function() {
     pred = {'foo': 'bar'};
     result = test(in0, pred);
     result.should.be.false;
   });
 
-  it('should return false for empty predicate', function() {
+  it('returns false for empty predicate', function() {
     pred = {};
     result = test(in0, pred);
     result.should.be.false;
   });
 
-  it('rejects unknown operations', function() {
+  it('returns false for unknown operations', function() {
     pred = {
       op: 'not_an_op',
       path: '/num1',
@@ -248,6 +248,114 @@ describe('json-predicate', function() {
 
       it('returns false for non-existent key (deep path)', function() {
         pred.path = '/objA/objB/not_a_key';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
+    describe('less operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'less'
+        };
+      });
+
+      it('returns false for non-numeric comparisons', function() {
+        pred.path = '/stringABC';
+        pred.value = 'XYZ';
+
+        result = test(in0, pred);
+        result.should.be.false;
+        // Check the reverse since a naïve string comparison
+        // would return true for one of these.
+        pred.path = '/objA/stringXYZ';
+        pred.value = 'ABC';
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = ['a', 'b'];
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = {'a': 'foo', 'b': 'bar'};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for greater predicate value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 4;
+
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for lesser predicate value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 2;
+
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for equal numeric value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 3;
+
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
+    describe('more operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'more'
+        };
+      });
+
+      it('returns false for non-numeric comparisons', function() {
+        pred.path = '/stringABC';
+        pred.value = 'XYZ';
+
+        result = test(in0, pred);
+        result.should.be.false;
+        // Check the reverse since a naïve string comparison
+        // would return true for one of these.
+        pred.path = '/objA/stringXYZ';
+        pred.value = 'ABC';
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = ['a', 'b'];
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = {'a': 'foo', 'b': 'bar'};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for greater predicate value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 4;
+
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for lesser predicate value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 2;
+
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for equal numeric value', function() {
+        pred.path = '/objA/objB/num3';
+        pred.value = 3;
+
         result = test(in0, pred);
         result.should.be.false;
       });

@@ -41,9 +41,9 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [defined](#defined)
   * [ends](#ends)
   * [in](#in) (not implemented yet)
-  * [less](#less) (not implemented yet)
+  * [less](#less)
   * [matches](#matches) (not implemented yet)
-  * [more](#more) (not implemented yet)
+  * [more](#more)
   * [starts](#starts)
   * [test](#test) (not implemented yet)
   * [type](#type) (not implemented yet)
@@ -135,6 +135,42 @@ predicate = {
 };
 
 jsonTest(data, predicate); // true
+```
+
+#### less
+Check if the numeric value at `path` is less than the provided value.
+Returns false if either the value at `path` or the predicate value is
+non-numeric.
+```
+  var data = {
+    a: 1984
+  }
+
+  var predicate = {
+    op: 'less',
+    path: '/a',
+    value: 1983
+  }
+
+  jsonTest(data, predicate); // true
+```
+
+#### more
+Check if the numeric value at `path` is more than the provided value.
+Returns false if either the value at `path` or the predicate value is
+non-numeric.
+```
+  var data = {
+    a: 1984
+  }
+
+  var predicate = {
+    op: 'less',
+    path: '/a',
+    value: 1985
+  }
+
+  jsonTest(data, predicate); // true
 ```
 
 #### starts
