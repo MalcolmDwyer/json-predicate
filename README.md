@@ -4,6 +4,8 @@
 all operations are implemented yet.  Expecting to have a working release
 within about two weeks.
 
+![alt text](https://ci.appveyor.com/api/projects/status/github/MalcolmDwyer/json-predicate "Appveyor build status")
+
 Check/Test/Validate if a block of JSON meets criteria defined
 by another block of JSON.
 
