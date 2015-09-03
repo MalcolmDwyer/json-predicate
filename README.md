@@ -4,7 +4,7 @@
 all operations are implemented yet.  Expecting to have a working release
 within about two weeks.
 
-![alt text](https://ci.appveyor.com/api/projects/status/github/MalcolmDwyer/json-predicate "Appveyor build status")
+[![alt text](https://ci.appveyor.com/api/projects/status/github/MalcolmDwyer/json-predicate "Appveyor build status")](https://ci.appveyor.com/project/MalcolmDwyer/json-predicate)
 
 Check/Test/Validate if a block of JSON meets criteria defined
 by another block of JSON.
