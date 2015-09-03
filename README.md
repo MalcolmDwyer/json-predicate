@@ -40,7 +40,7 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [contains](#contains)
   * [defined](#defined)
   * [ends](#ends)
-  * [in](#in) (not implemented yet)
+  * [in](#in)
   * [less](#less)
   * [matches](#matches) (not implemented yet)
   * [more](#more)
@@ -135,6 +135,45 @@ predicate = {
 };
 
 jsonTest(data, predicate); // true
+```
+
+#### in
+Check if the value is included in the provided value array.  Compares objects
+deeply (using lodash _.isEqual() under the hood).  `ignore_case:true` can be
+passed to allow mismatched strings.
+```
+  var data = {
+    firstName: 'Mitch',
+    lastName: 'Taylor'
+  }
+
+  var predicate = {
+    op: 'in',
+    path: '/firstName',
+    value: ['chris', 'mitch', 'kent', 'jordan'],
+    ignore_case: true
+  }
+
+  jsonTest(data, predicate); // true
+
+  var data = {
+    title: 'Everything',
+    host: {
+      firstName: 'Jerry',
+      lastName: 'Hathaway'
+    }
+  };
+
+  var predicate = {
+    op: 'in',
+    path: '/host',
+    value: [
+      {firstName: 'Jerry', lastName: 'Hathaway'},
+      {firstName: 'Albert', lastName: 'Einstein'}
+    ]
+  }
+
+  jsonTest(data, predicate); // true
 ```
 
 #### less

@@ -47,6 +47,13 @@ describe('json-predicate', function() {
           stringMNO: 'MNO',
           stringMnO_456: 'MnO_456'
         }
+      },
+      objX: {
+        num1: 1,
+        stringAbc: 'Abc',
+        objY: {
+          num2: 2
+        }
       }
     };
   });
@@ -116,6 +123,80 @@ describe('json-predicate', function() {
         pred.ignore_case = true;
         result = test(in0, pred);
         result.should.be.true;
+      });
+    });
+
+    describe('in operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'in'
+        };
+      });
+
+      it('returns true for string value contained in supplied array', function() {
+        pred.path = '/stringABC',
+        pred.value = ['foo', 'ABC', 'bar'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for string mismatched only by case, with ignore_case false', function() {
+        pred.path = '/stringABC',
+        pred.value = ['foo', 'aBc', 'bar'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for string mismatched only by case, with ignore_case true', function() {
+        pred.path = '/stringABC',
+        pred.value = ['foo', 'aBc', 'bar'];
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for shallow object in supplied array', function() {
+        pred.path = '/objX/objY',
+        pred.value = ['foo', {num2:2}, 'bar'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for deep object in supplied array', function() {
+        pred.path = '/objX',
+        pred.value = ['foo', {num1:1, stringAbc: 'Abc', objY: {num2:2}}, 'bar'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for number value contained in supplied array', function() {
+        pred.path = '/objA/num2',
+        pred.value = [{foo: 'foo'}, 2, 'bar'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false if value is not an array', function() {
+        pred.path = '/stringA',
+        // Trying to trick it by supplying a subset of the value string
+        pred.value = 'ABC'
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for string match inside object, honoring ignore_case', function() {
+        pred.path = '/objX',
+        pred.value = ['foo', {num1:1, stringAbc: 'aBc', objY: {num2:2}}, 'bar'];
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for string inside object mismatched only by case, with ignore_case false', function() {
+        pred.path = '/objX',
+        pred.value = ['foo', {num1:1, stringAbc: 'aBc', objY: {num2:2}}, 'bar'];
+        result = test(in0, pred);
+        result.should.be.false;
       });
     });
 

@@ -1,6 +1,6 @@
 {
   "name": "json-predicate",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Javascript implementation of JSON predicate (by Snell)",
   "main": "lib/index.js",
   "scripts": {
@@ -23,5 +23,8 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "mocha": "^2.3.0"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
   }
 }
