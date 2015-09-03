@@ -165,7 +165,7 @@ non-numeric.
   }
 
   var predicate = {
-    op: 'less',
+    op: 'more',
     path: '/a',
     value: 1985
   }
