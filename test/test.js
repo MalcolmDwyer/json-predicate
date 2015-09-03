@@ -253,6 +253,50 @@ describe('json-predicate', function() {
       });
     });
 
+    describe('undefined operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'undefined'
+        };
+      });
+
+      it('returns true for non-existent key (shallow path)', function() {
+        pred.path = '/not_a_key';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for non-existent key (deep path)', function() {
+        pred.path = '/objA/not_a_key';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for existing key (shallow path)', function() {
+        pred.path = '/num1';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for existing key with null value (shallow path)', function() {
+        pred.path = '/null1';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for existing key (deep path)', function() {
+        pred.path = '/objA/objB/num3';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for existing key with null value (deep path)', function() {
+        pred.path = '/objA/objB/null3';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
     describe('less operation', function() {
       beforeEach(function() {
         pred = {

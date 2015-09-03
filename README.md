@@ -47,7 +47,7 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [starts](#starts)
   * [test](#test) (not implemented yet)
   * [type](#type) (not implemented yet)
-  * [undefined](#undefined) (not implemented yet)
+  * [undefined](#undefined)
 * Second Order Predicates
   * [and](#and)
   * [not](#not)
@@ -201,6 +201,35 @@ predicate = {
 jsonTest(data, predicate); // true
 ```
 
+#### undefined
+Check if the key at `path` does not exist (is undefined).
+```
+var data = {
+  a: {
+    b: 'You\'ve seen him too?',
+    c: null
+  }
+};
+
+predicate = {
+  op: 'undefined',
+  path: '/a/z'
+}
+jsonTest(data, predicate); // true
+
+var predicate = {
+  op: 'undefined',
+  path: '/a/b'
+}
+jsonTest(data, predicate); // false
+
+var predicate = {
+  op: 'undefined',
+  path: '/a/c'
+}
+jsonTest(data, predicate); // false
+```
+
 #### and
 Check if two or more sub-predicates are true.
 ```
@@ -268,7 +297,7 @@ var data = {
 }
 
 predicate = {
-  op: 'and',
+  op: 'or',
   apply: [
     {
       op: 'contains',
@@ -285,7 +314,7 @@ predicate = {
 jsonTest(data, predicate); // true
 
 predicate = {
-  op: 'and',
+  op: 'or',
   apply: [
     {
       op: 'contains',
@@ -312,7 +341,7 @@ var data = {
 }
 
 predicate = {
-  op: 'and',
+  op: 'or',
   path: '/a',
   apply: [
     {
@@ -342,7 +371,7 @@ var data = {
 }
 
 predicate = {
-  op: 'and',
+  op: 'not',
   apply: [
     {
       op: 'contains',
@@ -369,7 +398,7 @@ var data = {
 }
 
 predicate = {
-  op: 'and',
+  op: 'not',
   path: '/a',
   apply: [
     {
