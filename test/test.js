@@ -303,6 +303,107 @@ describe('json-predicate', function() {
       });
     });
 
+    describe('test operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'test'
+        };
+      });
+
+      it('returns true for matching string value', function() {
+        pred.path = '/stringABC',
+        pred.value = 'ABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for string mismatched only by case, with ignore_case false', function() {
+        pred.path = '/stringABC',
+        pred.value = 'aBc';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for string mismatched only by case, with ignore_case true', function() {
+        pred.path = '/stringABC',
+        pred.value = 'aBc';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for matching shallow object', function() {
+        pred.path = '/objX/objY',
+        pred.value = {num2:2};
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for matching deep object', function() {
+        pred.path = '/objX',
+        pred.value = {num1:1, stringAbc: 'Abc', objY: {num2:2}};
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for matching number value', function() {
+        pred.path = '/objA/num2',
+        pred.value = 2;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for matching array', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a', 'b', 'c'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for superset array', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a', 'b', 'c', 'd'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for subset array', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a', 'b'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for string disguised as array', function() {
+        pred.path = '/arrayA',
+        pred.value = 'abcd';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for array disguised as a string', function() {
+        pred.path = '/stringABC',
+        pred.value = ['A', 'B', 'C'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for string match inside object, honoring ignore_case', function() {
+        pred.path = '/objX',
+        pred.value = {num1:1, stringAbc: 'aBc', objY: {num2:2}};
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for string inside object mismatched only by case, with ignore_case false', function() {
+        pred.path = '/objX',
+        pred.value = {num1:1, stringAbc: 'aBc', objY: {num2:2}};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
     describe('ends operation', function() {
       beforeEach(function() {
         pred = {

@@ -45,7 +45,7 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [matches](#matches)
   * [more](#more)
   * [starts](#starts)
-  * [test](#test) (not implemented yet)
+  * [test](#test)
   * [type](#type) (not implemented yet)
   * [undefined](#undefined)
 * Second Order Predicates
@@ -139,8 +139,8 @@ jsonTest(data, predicate); // true
 
 #### in
 Check if the value at `path` is included in the provided value array.  Compares objects
-deeply (using lodash `_.isEqual()` under the hood).  `ignore_case:true` can be
-passed to allow mismatched strings.
+deeply (using lodash [_.isEqual](https://lodash.com/docs#isEqual) under the
+hood).  `ignore_case:true` can be passed to allow mismatched strings.
 ```javascript
   var data = {
     firstName: 'Mitch',
@@ -269,6 +269,61 @@ predicate = {
 };
 
 jsonTest(data, predicate); // true
+```
+
+#### test
+Check if the value at `path` is equal to the provided value.  Compares objects
+deeply (using lodash [_.isEqual](https://lodash.com/docs#isEqual) under the
+hood).  `ignore_case:true` can be passed to allow mismatched strings.
+```javascript
+
+  // Match strings:
+  var data = {
+    firstName: 'Mitch',
+    lastName: 'Taylor'
+  }
+
+  var predicate = {
+    op: 'test',
+    path: '/firstName',
+    value: 'mitch',
+    ignore_case: true
+  }
+
+  jsonTest(data, predicate); // true
+
+  // Match objects:
+  var data = {
+    title: 'Everything',
+    host: {
+      firstName: 'Jerry',
+      lastName: 'Hathaway'
+    }
+  };
+
+  var predicate = {
+    op: 'test',
+    path: '/host',
+    value: {firstName: 'Jerry', lastName: 'Hathaway'}
+  }
+
+  jsonTest(data, predicate); // true
+
+  // Match numbers:
+  var data = {
+    laser: {
+      wavelength: 600,
+      unit: 'nm'
+    }
+  }
+
+  var predicate = {
+    op: 'test',
+    path: '/laser/wavelength',
+    value: 600
+  }
+
+  jsonTest(data, predicate); // true
 ```
 
 #### undefined
