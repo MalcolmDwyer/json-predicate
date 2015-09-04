@@ -27,6 +27,14 @@ var test = jsonPred.test;
 describe('json-predicate', function() {
   var in0, pred, result;
 
+  // If the "value" member specifies "date", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "full-date" construct.
+  // If the "value" member specifies "time", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "full-time" construct.
+  // If the "value" member specifies "date-time", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "date-time" construct.
+  // If the "value" member specifies "lang", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC4646] "Language-Tag" construct.
+  // If the "value" member specifies "lang-range", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC4647] "language-range" construct.
+  // If the "value" member specifies "iri", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3987] "IRI-reference" construct.
+  // If the "value" member specifies "absolute-iri", the type predicate will evaluate a true if the value referenced by the "path" member is a JSON string conforming to the [RFC3987] "IRI" construct.
+
   before(function() {
     in0 = {
       num1: 1,
@@ -38,6 +46,20 @@ describe('json-predicate', function() {
       objA: {
         num2: 2,
         null2: null,
+        boolT: true,
+        boolF: false,
+        dateObj: new Date('2010-10-10T10:10:10Z'),
+        dateTime: '2010-10-10T10:10:10Z',
+        dateTimeOffset: '2010-10-10T10:10:10+05:30',
+        date: '2010-10-10',
+        timeZ: '10:10:10Z',
+        timeOffset: '10:10:10+05:30',
+        lang: 'en-US',
+        langRange: 'CH-*',
+        langRange2: '*',
+        langRange3: 'CH-de',
+        iri: 'https://github.com/MalcolmDwyer/json-predicate#test',
+        absoluteIri: 'https://github.com/MalcolmDwyer/json-predicate',
         stringX: 'X',
         stringXYZ: 'XYZ',
         stringXyZ_789: 'XyZ_789',
@@ -685,6 +707,225 @@ describe('json-predicate', function() {
         pred.path = '/objA/objB/num3';
         pred.value = 3;
 
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+    });
+
+    describe('type operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'type'
+        };
+      });
+      // If the "value" member specifies "number", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON number.
+      it ('returns true when matching number to type "number"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'number';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching string to type "number"', function() {
+        pred.path = '/objA/stringXYZ';
+        pred.value = 'number';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "string", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string.
+      it ('returns true when matching string to type "string"', function() {
+        pred.path = '/objA/stringXYZ';
+        pred.value = 'string';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "string"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'string';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "boolean", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON boolean.
+      it ('returns true when matching boolean to type "boolean"', function() {
+        pred.path = '/objA/boolT';
+        pred.value = 'boolean';
+        result = test(in0, pred);
+        result.should.be.true;
+
+        pred.path = '/objA/boolF';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "boolean"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'boolean';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "object", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON object.
+      it ('returns true when matching object to type "object"', function() {
+        pred.path = '/objA/objB';
+        pred.value = 'object';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "object"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'object';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "array", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON array.
+      it ('returns true when matching array to type "array"', function() {
+        pred.path = '/arrayA';
+        pred.value = 'array';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "array"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'array';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "null", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON null.
+      it ('returns true when matching null to type "null"', function() {
+        pred.path = '/objA/null2';
+        pred.value = 'null';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "null"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'null';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "undefined", the type predicate will evaluate as true if the member referenced by the "path" member does not exist.
+      it ('returns true when matching undefined to type "undefined"', function() {
+        pred.path = '/objA/not_a_thing';
+        pred.value = 'undefined';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching number to type "undefined"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'undefined';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      // If the "value" member specifies "date", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "full-date" construct.
+      it ('returns true when matching date to type "date"', function() {
+        pred.path = '/objA/date';
+        pred.value = 'date';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching date-time to type "date"', function() {
+        pred.path = '/objA/dateTime';
+        pred.value = 'date';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "time", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "full-time" construct.
+      it ('returns true when matching time (Z) to type "time"', function() {
+        pred.path = '/objA/timeZ';
+        pred.value = 'time';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns true when matching time (offset) to type "time"', function() {
+        pred.path = '/objA/timeOffset';
+        pred.value = 'time';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching date-time to type "time"', function() {
+        pred.path = '/objA/dateTime';
+        pred.value = 'time';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "date-time", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3339] "date-time" construct.
+      it ('returns true when matching date-time (Z) to type "date-time"', function() {
+        pred.path = '/objA/dateTime';
+        pred.value = 'date-time';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns true when matching date-time (offset) to type "date-time"', function() {
+        pred.path = '/objA/dateTimeOffset';
+        pred.value = 'date-time';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching date to type "date-time"', function() {
+        pred.path = '/objA/date';
+        pred.value = 'date-time';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "lang", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC4646] "Language-Tag" construct.
+      it ('returns true when matching lang to type "lang"', function() {
+        pred.path = '/objA/lang';
+        pred.value = 'lang';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching num to type "lang"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'lang';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "lang-range", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC4647] "language-range" construct.
+      it ('returns true when matching lang-range to type "lang-range"', function() {
+        pred.path = '/objA/langRange';
+        pred.value = 'lang-range';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns true when matching lang-range2 to type "lang-range"', function() {
+        pred.path = '/objA/langRange2';
+        pred.value = 'lang-range';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns true when matching lang-range3 to type "lang-range"', function() {
+        pred.path = '/objA/langRange3';
+        pred.value = 'lang-range';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching num to type "lang-range"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'lang-range';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "iri", the type predicate will evaluate as true if the value referenced by the "path" member is a JSON string conforming to the [RFC3987] "IRI-reference" construct.
+      it ('returns true when matching iri to type "iri"', function() {
+        pred.path = '/objA/iri';
+        pred.value = 'iri';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching num to type "iri"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'iri';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+      // If the "value" member specifies "absolute-iri", the type predicate will evaluate a true if the value referenced by the "path" member is a JSON string conforming to the [RFC3987] "IRI" construct.
+      it ('returns true when matching iri to type "absolute-iri"', function() {
+        pred.path = '/objA/absoluteIri';
+        pred.value = 'absolute-iri';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+      it ('returns false when matching num to type "absolute-iri"', function() {
+        pred.path = '/objA/num2';
+        pred.value = 'absolute-iri';
         result = test(in0, pred);
         result.should.be.false;
       });

@@ -1,23 +1,27 @@
 # json-predicate
 
-> Currently under active development as of September 1, 2015.  Not
-all operations are implemented yet.  Expecting to have a working release
-within about two weeks.
-
 [![Build Status](https://travis-ci.org/MalcolmDwyer/json-predicate.svg?branch=master)](https://travis-ci.org/MalcolmDwyer/json-predicate) [![Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate.svg)](https://david-dm.org/MalcolmDwyer/json-predicate) [![Dev Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate/dev-status.svg)](https://david-dm.org/MalcolmDwyer/json-predicate#info=devDependencies)
 
-Check/Test/Validate if a block of JSON meets criteria defined
-by another block of JSON.
+Check/Test/Validate if a block of JSON meets criteria defined by another block
+of JSON.  This is a javascript implementation of the
+[JSON Predicate (Snell) spec][1].
 
 One likely use of this would be for passing data validations from the
 back-end to the front-end in a programmatic way.  If your back-end is
 validating incoming data on an API, then it may be useful to send those
 same validations to the front-end so forms can be checked proactively
-for the user.  This library takes care of the front-end side.  Now you
-just need a way to have your back-end serialize out your validations
+for the user.  The [JSON Predicate spec][1] defines the interchange,
+and this library takes care of reading those validations on the front-end.
+Now you just need a way to have your back-end serialize out your validations
 in the JSON predicate format.  (Good luck with that!)
 
-This is a javascript implementation of the [JSON Predicate (Snell) spec](http://tools.ietf.org/id/draft-snell-json-test-01.html).
+Please note that this library does not deal directly with JSON strings, themselves.
+Instead, it is assumed that the JSON has already been parsed into regular
+Javascript objects/arrays/expressions.
+
+Given that this library deals with Javascript data (and not the actual JSON
+strings), it adds a few extra capabilities when it comes to type checking and
+regular expression matching.
 
 ## Installation
 
@@ -326,6 +330,77 @@ hood).  `ignore_case:true` can be passed to allow mismatched strings.
   jsonTest(data, predicate); // true
 ```
 
+#### type
+Check if the key at `path` is of the type given in the predicate value.
+Types can be:
+* `number`
+* `string`
+* `boolean`
+* `object`
+* `array`
+* `null`
+* `undefined`
+* `date` (A string conforming to [RFC3339][2] 'full-date' spec)
+* `date-time` (A string conforming to [RFC3339][2] 'date-time' spec)
+* `time` (A string conforming to [RFC3339][2] 'full-time' spec)
+* `lang` (A string conforming to [RFC4646][3] 'Language-Tag' spec)
+* `lang-range` (A string conforming to [RFC4647][4] 'language-range')
+* `iri` (A string conforming to [RFC3987][5] 'IRI-reference' spec)
+* `absolute-iri` (A string conforming to [RFC3987][5] 'IRI' spec)
+
+> Note: date, date-time, time string matching is based on the following
+> regular expressions.  They may not exactly match the RFC specs.  I invite
+> pull requests or recommendations for libraries to depend on.
+>  * date: `/^\d{4}-\d{2}-\d{2}$/`
+>  * date-time: `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?((?:[\+\-]\d{2}:\d{2})|Z)$/`
+>  * time: `/^\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?((?:[\+\-]\d{2}:\d{2})|Z)$/`
+
+> Note: lang and lang-range string matching is based on the following
+> regular expressions.  They may not exactly match RFC specs.  I invite
+> pull requests or recommendations for libraries to depend on.
+>  * lang: `/^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?$/`
+>  * lang-range: `/^\*|[A-Z]{1,8}(?:-[\*A-Za-z0-9]{1,8})?$/`
+
+> Note: iri and absolute-iri string matching is based on the
+> [valid-url](https://www.npmjs.com/package/valid-url) library.  With
+> `validUrl.isUri()` being used for `'iri'` type, and `validUrl.isWebUri()`
+> being used for `'absolute-iri'`.  This is almost certainly not the correct
+> behavior with respect to [RFC3987][5] and the JSON-predicate spec.  In invite
+> pull requests or recommendations to improve this.
+
+```javascript
+var data = {
+  num: 23,
+  str: "little pickles",
+  bool: true,
+  obj: { firstName: "Lazlo", lastName: "Hollyfeld" },
+  arr: ['tracking system', 'large spinning mirror'],
+  nil: null,
+  d: '1985-08-07',
+  dt: '1985-08-07T19:00:00Z',
+  t: '19:00:00-05:00',
+  l: 'en-US',
+  lr: 'CH-*',
+  iri: 'https://github.com/MalcolmDwyer/json-predicate#type',
+  absIri: 'https://github.com/MalcolmDwyer/json-predicate'
+}
+
+jsonTest(data, {op:'type', path:'/num',       value:'number'});       // true
+jsonTest(data, {op:'type', path:'/str',       value:'string'});       // true
+jsonTest(data, {op:'type', path:'/bool',      value:'boolean'});      // true
+jsonTest(data, {op:'type', path:'/obj',       value:'object'});       // true
+jsonTest(data, {op:'type', path:'/arr',       value:'array'});        // true
+jsonTest(data, {op:'type', path:'/nil',       value:'null'});         // true
+jsonTest(data, {op:'type', path:'/not_a_key', value:'undefined'});    // true
+jsonTest(data, {op:'type', path:'/d',         value:'date'});         // true
+jsonTest(data, {op:'type', path:'/dt',        value:'date-time'});    // true
+jsonTest(data, {op:'type', path:'/t',         value:'time'});         // true
+jsonTest(data, {op:'type', path:'/l',         value:'lang'});         // true
+jsonTest(data, {op:'type', path:'/lr',        value:'lang-range'});   // true
+jsonTest(data, {op:'type', path:'/iri',       value:'iri'});          // true
+jsonTest(data, {op:'type', path:'/absIri',    value:'absolute-iri'}); // true
+```
+
 #### undefined
 Check if the key at `path` does not exist (is undefined).
 ```javascript
@@ -540,3 +615,9 @@ predicate = {
 }
 jsonTest(data, predicate); // true
 ```
+
+[1]: http://tools.ietf.org/id/draft-snell-json-test-01.html
+[2]: http://tools.ietf.org/html/rfc3339
+[3]: http://tools.ietf.org/html/rfc4646
+[4]: http://tools.ietf.org/html/rfc4647
+[5]: http://tools.ietf.org/html/rfc3987
