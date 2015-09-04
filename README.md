@@ -50,7 +50,7 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [more](#more)
   * [starts](#starts)
   * [test](#test)
-  * [type](#type) (not implemented yet)
+  * [type](#type)
   * [undefined](#undefined)
 * Second Order Predicates
   * [and](#and)
@@ -348,20 +348,22 @@ Types can be:
 * `iri` (A string conforming to [RFC3987][5] 'IRI-reference' spec)
 * `absolute-iri` (A string conforming to [RFC3987][5] 'IRI' spec)
 
-> Note: date, date-time, time string matching is based on the following
+> *Note*: date, date-time, time string matching is based on the following
 > regular expressions.  They may not exactly match the RFC specs.  I invite
 > pull requests or recommendations for libraries to depend on.
 >  * date: `/^\d{4}-\d{2}-\d{2}$/`
 >  * date-time: `/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?((?:[\+\-]\d{2}:\d{2})|Z)$/`
 >  * time: `/^\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?((?:[\+\-]\d{2}:\d{2})|Z)$/`
 
-> Note: lang and lang-range string matching is based on the following
+
+> *Note*: lang and lang-range string matching is based on the following
 > regular expressions.  They may not exactly match RFC specs.  I invite
 > pull requests or recommendations for libraries to depend on.
 >  * lang: `/^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?$/`
 >  * lang-range: `/^\*|[A-Z]{1,8}(?:-[\*A-Za-z0-9]{1,8})?$/`
 
-> Note: iri and absolute-iri string matching is based on the
+
+> *Note*: iri and absolute-iri string matching is based on the
 > [valid-url](https://www.npmjs.com/package/valid-url) library.  With
 > `validUrl.isUri()` being used for `'iri'` type, and `validUrl.isWebUri()`
 > being used for `'absolute-iri'`.  This is almost certainly not the correct
