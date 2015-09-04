@@ -4,7 +4,7 @@
 all operations are implemented yet.  Expecting to have a working release
 within about two weeks.
 
-[![Build Status](https://travis-ci.org/MalcolmDwyer/json-predicate.svg?branch=master)](https://travis-ci.org/MalcolmDwyer/json-predicate)
+[![Build Status](https://travis-ci.org/MalcolmDwyer/json-predicate.svg?branch=master)](https://travis-ci.org/MalcolmDwyer/json-predicate) [![Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate.svg)](https://david-dm.org/MalcolmDwyer/json-predicate) [![Dev Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate/dev-status.svg)](https://david-dm.org/MalcolmDwyer/json-predicate#info=devDependencies)
 
 Check/Test/Validate if a block of JSON meets criteria defined
 by another block of JSON.
