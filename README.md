@@ -22,12 +22,12 @@ This is a javascript implementation of the [JSON Predicate (Snell) spec](http://
 ## Installation
 
 node:
-```
+```bash
 $ npm install json-predicate
 ````
 
 ## Usage
-```
+```javascript
 var jsonPredicate = require('json-predicate');
 var jsonTest = jsonPredicate.test;
 
@@ -42,7 +42,7 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [ends](#ends)
   * [in](#in)
   * [less](#less)
-  * [matches](#matches) (not implemented yet)
+  * [matches](#matches)
   * [more](#more)
   * [starts](#starts)
   * [test](#test) (not implemented yet)
@@ -56,7 +56,7 @@ var passesPredicate = jsonTest(inputData, predicate);
 #### contains
 Check if the string at `path` includes the provided substring.
 Add `ignore_case: true` to make the check case-insensitive.
-```
+```javascript
 var data = {
   a: {
     b: 'Smart People on Ice!'
@@ -82,7 +82,7 @@ jsonTest(data, predicate); // true
 ```
 #### defined
 Check if the key at `path` exists (is not undefined).
-```
+```javascript
 var data = {
   a: {
     b: 'You\'ve seen him too?',
@@ -112,7 +112,7 @@ jsonTest(data, predicate); // false
 #### ends
 Check if the string at `path` ends with the provided substring.
 Add `ignore_case: true` to make the check case-insensitive.
-```
+```javascript
 var data = {
   a: {
     b: 'Smart People on Ice!'
@@ -138,10 +138,10 @@ jsonTest(data, predicate); // true
 ```
 
 #### in
-Check if the value is included in the provided value array.  Compares objects
-deeply (using lodash _.isEqual() under the hood).  `ignore_case:true` can be
+Check if the value at `path` is included in the provided value array.  Compares objects
+deeply (using lodash `_.isEqual()` under the hood).  `ignore_case:true` can be
 passed to allow mismatched strings.
-```
+```javascript
   var data = {
     firstName: 'Mitch',
     lastName: 'Taylor'
@@ -180,7 +180,7 @@ passed to allow mismatched strings.
 Check if the numeric value at `path` is less than the provided value.
 Returns false if either the value at `path` or the predicate value is
 non-numeric.
-```
+```javascript
   var data = {
     a: 1984
   }
@@ -194,11 +194,42 @@ non-numeric.
   jsonTest(data, predicate); // true
 ```
 
+#### matches
+Check if the string value at `path` satisfies the provided [regex](https://en.wikipedia.org/wiki/Regular_expression).  The
+predicate value can be given directly as a regex, or as a string to be turned
+into a regex.  `ignore_case:true` can also be added to the predicate to make the
+regex test case-insensitive.
+
+```javascript
+  var data = {
+    laser: {
+      e: '1x10^6J/l' // "... That's hotter than the sun!"
+    }
+  }
+
+  var predicate = {
+    op: 'matches',
+    path: '/laser/e',
+    value: '[1-9x^]*J\/l' // pass regex as string
+  }
+
+  jsonTest(data, predicate); // true
+
+  var predicate = {
+    op: 'matches',
+    path: '/laser/e',
+    value: /[1-9x^]*J\/l/ // or pass regex directly
+  }
+
+  jsonTest(data, predicate); // true
+
+```
+
 #### more
 Check if the numeric value at `path` is more than the provided value.
 Returns false if either the value at `path` or the predicate value is
 non-numeric.
-```
+```javascript
   var data = {
     a: 1984
   }
@@ -215,7 +246,7 @@ non-numeric.
 #### starts
 Check if the string at `path` starts with the provided substring.
 Add `ignore_case: true` to make the check case-insensitive.
-```
+```javascript
 var data = {
   a: {
     b: 'Smart People on Ice!'
@@ -242,7 +273,7 @@ jsonTest(data, predicate); // true
 
 #### undefined
 Check if the key at `path` does not exist (is undefined).
-```
+```javascript
 var data = {
   a: {
     b: 'You\'ve seen him too?',
@@ -271,11 +302,11 @@ jsonTest(data, predicate); // false
 
 #### and
 Check if two or more sub-predicates are true.
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 
@@ -298,11 +329,11 @@ jsonTest(data, predicate); // true
 ```
 
 Paths can also be defined in layers:
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 
@@ -327,11 +358,11 @@ jsonTest(data, predicate); // true
 
 #### or
 Check if any of two or more sub-predicates are true.
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 
@@ -371,11 +402,11 @@ jsonTest(data, predicate); // false
 ```
 
 Paths can also be defined in layers:
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 
@@ -401,11 +432,11 @@ jsonTest(data, predicate); // true
 
 #### not
 Check if two or more sub-predicates are all false.  Equivalent to a logical NOR operation.
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 
@@ -428,11 +459,11 @@ jsonTest(data, predicate); // true
 ```
 
 Paths can also be defined in layers:
-```
+```javascript
 var data = {
   a: {
     b: 'Much further, much faster!',
-    c: 'I don't know; I found it in one of the labs.'
+    c: 'I don\'t know; I found it in one of the labs.'
   }
 }
 

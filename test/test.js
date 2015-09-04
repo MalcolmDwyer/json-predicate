@@ -34,6 +34,7 @@ describe('json-predicate', function() {
       stringA: 'A',
       stringABC: 'ABC',
       stringAbC_123: 'AbC_123',
+      arrayA: ['a','b','c'],
       objA: {
         num2: 2,
         null2: null,
@@ -120,6 +121,108 @@ describe('json-predicate', function() {
       it('honors ignore_case:true', function() {
         pred.value = 'xy';
         pred.path = '/objA/stringXYZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+    });
+
+    describe('matches operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'matches'
+        };
+      });
+
+      it('returns false for any non-string target path', function() {
+        pred.value = "[\\w\\s]*";
+
+        pred.path = '/num1';
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.path = '/null1';
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.path = '/objA';
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.path = '/arrayA';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for string that would make an invalid regex', function() {
+        pred.path = '/stringABC';
+        pred.value = '\\';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for any value other than a RegExp or a string', function() {
+        pred.path = '/stringABC';
+
+        pred.value = 1;
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = {a:1};
+        result = test(in0, pred);
+        result.should.be.false;
+
+        pred.value = ['a', 'b', 'c'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for match when providing string that will become RegExp', function() {
+        pred.value = "[A-Z]*";
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for different case string with ignore_case: true', function() {
+        pred.value = "aBc";
+        pred.path = '/stringABC';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for different case string without ignore_case: true', function() {
+        pred.value = "aBc";
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true when providing matching RegExp directly', function() {
+        pred.value = /[A-Z]+/;
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false when providing matching RegExp directly with mismatch case', function() {
+        pred.value = /[a-z]+/;
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true when providing matching (/i) RegExp directly with mismatch case', function() {
+        pred.value = /[a-z]+/i;
+        pred.path = '/stringABC';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true when providing matching (/i) RegExp directly with mismatch case', function() {
+        pred.value = /[a-z]+/;
+        pred.path = '/stringABC';
         pred.ignore_case = true;
         result = test(in0, pred);
         result.should.be.true;
