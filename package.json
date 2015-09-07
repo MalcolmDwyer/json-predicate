@@ -1,6 +1,6 @@
 {
   "name": "json-predicate",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Javascript implementation of JSON predicate (by Snell)",
   "main": "lib/index.js",
   "scripts": {

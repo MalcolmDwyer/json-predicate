@@ -192,7 +192,7 @@ non-numeric.
   var predicate = {
     op: 'less',
     path: '/a',
-    value: 1983
+    value: 1985
   }
 
   jsonTest(data, predicate); // true
@@ -241,7 +241,7 @@ non-numeric.
   var predicate = {
     op: 'more',
     path: '/a',
-    value: 1985
+    value: 1983
   }
 
   jsonTest(data, predicate); // true
