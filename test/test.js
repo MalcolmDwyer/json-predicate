@@ -103,6 +103,16 @@ describe('json-predicate', function() {
     result.should.be.false;
   });
 
+  it('returns false for path into undefined part of data', function() {
+    pred = {
+      op: 'in',
+      path: '/objZZZ/objZZZZZZZZ',
+      value: ['does not matter']
+    }
+    result = test(in0, pred);
+    result.should.be.false;
+  });
+
   describe('first order predicates', function() {
     describe('contains operation', function() {
       beforeEach(function() {
