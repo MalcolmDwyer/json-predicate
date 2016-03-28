@@ -6,3 +6,8 @@
 
 
 * Fixed https://github.com/MalcolmDwyer/json-predicate/issues/2
+ - ReferenceError with bogus paths fixed.
+
+* Fixed https://github.com/MalcolmDwyer/json-predicate/issues/3
+ - Added 'contained' op.
+ - Added 'intersects' op.

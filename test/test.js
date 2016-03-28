@@ -42,7 +42,10 @@ describe('json-predicate', function() {
       stringA: 'A',
       stringABC: 'ABC',
       stringAbC_123: 'AbC_123',
-      arrayA: ['a','b','c'],
+      arrayA: ['a','b', 'c'],
+      arrayB: ['a', {foo: 'b'}, 3],
+      arrayC: ['a', {foo: {bar: 'b'}}, 3],
+      arrayN: ['a', {foo: {num1: 1}}, 3],
       objA: {
         num2: 2,
         null2: null,
@@ -938,6 +941,247 @@ describe('json-predicate', function() {
         pred.value = 'absolute-iri';
         result = test(in0, pred);
         result.should.be.false;
+      });
+    });
+
+    describe('contained operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'contained'
+        };
+      });
+
+      it('returns false when pred.path does not point to an array', function() {
+        pred.path = '/num1',
+        pred.value = 1;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing in supplied value', function() {
+        pred.path = '/arrayA',
+        pred.value = 'a';
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing string mismatched only by case, with ignore_case false', function() {
+        pred.path = '/arrayA',
+        pred.value = 'A';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing string mismatched only by case, with ignore_case true', function() {
+        pred.path = '/arrayA',
+        pred.value = 'A';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing matching shallow object', function() {
+        pred.path = '/arrayB',
+        pred.value = {foo: 'b'};
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing mismatched shallow object', function() {
+        pred.path = '/arrayB',
+        pred.value = {foo: 'c'};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing matching deep object', function() {
+        pred.path = '/arrayC',
+        pred.value = {foo: {bar: 'b'}};
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing mismatching deep object', function() {
+        pred.path = '/arrayC',
+        pred.value = {foo: {bar: 'c'}};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for array containing shallow object, matching except for case', function() {
+        pred.path = '/arrayB',
+        pred.value = {foo: 'B'};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing shallow object, matching with ignore_case', function() {
+        pred.path = '/arrayB',
+        pred.value = {foo: 'B'};
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing deep object, matching except for case', function() {
+        pred.path = '/arrayC',
+        pred.value = {foo: {bar: 'B'}};
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing deep object, matching with ignore_case', function() {
+        pred.path = '/arrayC',
+        pred.value = {foo: {bar: 'B'}};
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing numeric value', function() {
+        pred.path = '/arrayN',
+        pred.value = 3;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing deep object with numeric value', function() {
+        pred.path = '/arrayN',
+        pred.value = {foo: {num1: 1}};
+
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+    });
+
+    describe('intersects operation', function() {
+      beforeEach(function() {
+        pred = {
+          op: 'intersects'
+        };
+      });
+
+      it('returns false when pred.path does not point to an array', function() {
+        pred.path = '/num1',
+        pred.value = [1];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing in supplied single-value array', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing string mismatched only by case, with ignore_case false', function() {
+        pred.path = '/arrayA',
+        pred.value = ['A'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing string mismatched only by case, with ignore_case true', function() {
+        pred.path = '/arrayA',
+        pred.value = ['A'];
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array match against array of values (1 match)', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a', 'zzzzzz'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array match against array of values (all match)', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a','b', 'c'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array match against array of values (all match + extras', function() {
+        pred.path = '/arrayA',
+        pred.value = ['a','b', 'c', 'zzzzzz'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing matching shallow object', function() {
+        pred.path = '/arrayB',
+        pred.value = [{foo: 'b'}, 'zzzzzz'];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing mismatched shallow object', function() {
+        pred.path = '/arrayB',
+        pred.value = ['zzzzzz', {foo: 'c'}];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing matching deep object', function() {
+        pred.path = '/arrayC',
+        pred.value = ['zzzzzz', {foo: {bar: 'b'}}];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing mismatching deep object', function() {
+        pred.path = '/arrayC',
+        pred.value = ['zzzzzz', {foo: {bar: 'c'}}];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for array containing shallow object, matching except for case', function() {
+        pred.path = '/arrayB',
+        pred.value = [{foo: 'B'}, 'zzzzzz'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing shallow object, matching with ignore_case', function() {
+        pred.path = '/arrayB',
+        pred.value = [{foo: 'B'}, 'zzzzzz'];
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns false for array containing deep object, matching except for case', function() {
+        pred.path = '/arrayC',
+        pred.value = [{foo: {bar: 'B'}}, 'zzzzzz'];
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns true for array containing deep object, matching with ignore_case', function() {
+        pred.path = '/arrayC',
+        pred.value = ['zzzzzz', {foo: {bar: 'B'}}];
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing numeric value', function() {
+        pred.path = '/arrayN',
+        pred.value = ['zzzzzz', 3];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for array containing deep object with numeric value', function() {
+        pred.path = '/arrayN',
+        pred.value = ['zzzzzz', {foo: {num1: 1}}];
+
+        result = test(in0, pred);
+        result.should.be.true;
       });
     });
   });

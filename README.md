@@ -1,6 +1,9 @@
 # json-predicate
 
+[![npm version](https://badge.fury.io/js/json-predicate.svg)](https://badge.fury.io/js/json-predicate)
 [![Build Status](https://travis-ci.org/MalcolmDwyer/json-predicate.svg?branch=master)](https://travis-ci.org/MalcolmDwyer/json-predicate) [![Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate.svg)](https://david-dm.org/MalcolmDwyer/json-predicate) [![Dev Dependencies](https://david-dm.org/MalcolmDwyer/json-predicate/dev-status.svg)](https://david-dm.org/MalcolmDwyer/json-predicate#info=devDependencies)
+
+**[Version History](./CHANGES.md "CHANGES.md")**
 
 Check/Test/Validate if a block of JSON meets criteria defined by another block
 of JSON.  This is a javascript implementation of the
@@ -22,6 +25,7 @@ Javascript objects/arrays/expressions.
 Given that this library deals with Javascript data (and not the actual JSON
 strings), it adds a few extra capabilities when it comes to type checking and
 regular expression matching.
+
 
 ## Installation
 
@@ -52,6 +56,8 @@ var passesPredicate = jsonTest(inputData, predicate);
   * [test](#test)
   * [type](#type)
   * [undefined](#undefined)
+  * [contained](#contained) - Not in original spec
+  * [intersects](#intersects) - Not in original spec
 * Second Order Predicates
   * [and](#and)
   * [not](#not)
@@ -433,6 +439,47 @@ var predicate = {
 }
 jsonTest(data, predicate); // false
 ```
+
+#### contained
+> **Note:** This operation is not included in the Snell json-predicate spec.  If you are sharing predicates with other implementations, you should avoid using this op.
+
+Check if the key at `path` (which must be an array) contains the value given.  (Inverse of `in`, which has the array in the predicate and the single value in the data).  Can compare strings, numbers, shallow and deep objects.  Operation honors the ignore_case parameter when comparing string values.
+```javascript
+var data = {
+  a: {
+    b: [1983, 1984, 1985]
+  }
+}
+
+var predicate = {
+  op: 'contained',
+  path: '/a/b',
+  value: 1984
+}
+
+jsonTest(data, predicate); // true
+```
+
+#### intersects
+> **Note:** This operation is not included in the Snell json-predicate spec.  If you are sharing predicates with other implementations, you should avoid using this op.
+
+Check if the key at `path` (which must be an array) has any matching values in common with the provided array data (which also must be an array).  As long as one or more elements in the two arrays match (numeric, string, shallow or deep object comparisons, etc.), then the test will return true.  If either value is not an array, or if no array elements are found in common, then it returns false. Operation honors the ignore_case parameter for string comparisons.
+```javascript
+var data = {
+  a: {
+    b: [1983, 1984, 1985]
+  }
+}
+
+var predicate = {
+  op: 'contained',
+  path: '/a/b',
+  value: [1984, 1988, 1992]
+}
+
+jsonTest(data, predicate); // true
+```
+
 
 #### and
 Check if two or more sub-predicates are true.
