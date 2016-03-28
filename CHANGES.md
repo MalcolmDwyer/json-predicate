@@ -1,3 +1,11 @@
+# 0.9.3
+
+* Fixed https://github.com/MalcolmDwyer/json-predicate/issues/3
+ - Added 'contained' op.
+ - Added 'intersects' op.
+
+
+
 # 0.9.2
 * Upgraded dependencies
  * lodash 3.2.0 -> 4.6.1
@@ -7,7 +15,3 @@
 
 * Fixed https://github.com/MalcolmDwyer/json-predicate/issues/2
  - ReferenceError with bogus paths fixed.
-
-* Fixed https://github.com/MalcolmDwyer/json-predicate/issues/3
- - Added 'contained' op.
- - Added 'intersects' op.
