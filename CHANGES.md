@@ -1,3 +1,7 @@
+# 0.9.4
+* Fixed https://github.com/MalcolmDwyer/json-predicate/issues/5
+  - OR operation with empty apply array now returns true instead of false.
+
 # 0.9.3
 
 * Fixed https://github.com/MalcolmDwyer/json-predicate/issues/3
