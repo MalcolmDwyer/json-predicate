@@ -1274,6 +1274,13 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns true for AND case with empty apply array', function() {
+        pred.path = '/objA';
+        pred.apply = [];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
     });
 
     describe('or operation', function() {
@@ -1363,6 +1370,13 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns true for OR case with empty apply array', function() {
+        pred.path = '/objA';
+        pred.apply = [];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
     });
 
     describe('not operation (a.k.a. logical NOR operation)', function() {
@@ -1449,6 +1463,13 @@ describe('json-predicate', function() {
             path: '/not_real_2'
           }
         ];
+        result = test(in0, pred);
+        result.should.be.true;
+      });
+
+      it('returns true for NOT case with empty apply array', function() {
+        pred.path = '/objA';
+        pred.apply = [];
         result = test(in0, pred);
         result.should.be.true;
       });
