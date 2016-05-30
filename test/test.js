@@ -160,6 +160,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.true;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('matches operation', function() {
@@ -262,6 +277,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.true;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = /[whatever]/;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = /[whatever]/;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('in operation', function() {
@@ -336,6 +366,22 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = ['does not matter'];
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = ['does not matter'];
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
     });
 
     describe('test operation', function() {
@@ -437,6 +483,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('ends operation', function() {
@@ -482,6 +543,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.true;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('starts operation', function() {
@@ -526,6 +602,21 @@ describe('json-predicate', function() {
         pred.ignore_case = true;
         result = test(in0, pred);
         result.should.be.true;
+      });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
       });
     });
 
@@ -669,6 +760,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = 3;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 3;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('more operation', function() {
@@ -720,6 +826,21 @@ describe('json-predicate', function() {
         pred.path = '/objA/objB/num3';
         pred.value = 3;
 
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value', function() {
+        pred.value = 3;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 3;
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
         result = test(in0, pred);
         result.should.be.false;
       });
@@ -942,6 +1063,21 @@ describe('json-predicate', function() {
         result = test(in0, pred);
         result.should.be.false;
       });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
+      });
     });
 
     describe('contained operation', function() {
@@ -1051,6 +1187,21 @@ describe('json-predicate', function() {
 
         result = test(in0, pred);
         result.should.be.true;
+      });
+
+      it('returns false for undefined value', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = 'does not matter';
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
       });
     });
 
@@ -1182,6 +1333,21 @@ describe('json-predicate', function() {
 
         result = test(in0, pred);
         result.should.be.true;
+      });
+
+      it('returns false for undefined value', function() {
+        pred.value = ['does not matter'];
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        result = test(in0, pred);
+        result.should.be.false;
+      });
+
+      it('returns false for undefined value (with ignore_case:true)', function() {
+        pred.value = ['does not matter'];
+        pred.path = '/objZZZ/objZZZZZZZZ';
+        pred.ignore_case = true;
+        result = test(in0, pred);
+        result.should.be.false;
       });
     });
   });

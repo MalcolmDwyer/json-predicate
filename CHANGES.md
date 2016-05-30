@@ -1,3 +1,7 @@
+# 0.9.5
+* Fixed https://github.com/MalcolmDwyer/json-predicate/issues/6
+  - Some cases were returning undefined when test non-existent paths.
+
 # 0.9.4
 * Fixed https://github.com/MalcolmDwyer/json-predicate/issues/5
   - OR operation with empty apply array now returns true instead of false.
